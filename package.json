@@ -1,0 +1,21 @@
+{
+  "name": "adaptivex-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AdaptiveX AI — Smart Education Adaptive Learning Platform",
+  "workspaces": [
+    "apps/web",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/web",
+    "api": "cd apps/api && .\\.venv\\Scripts\\uvicorn.exe main:app --reload --port 8000",
+    "build": "npm run build --workspace=apps/web",
+    "lint": "npm run lint --workspace=apps/web",
+    "test": "npm run test --workspace=apps/web"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "lightningcss-linux-x64-gnu": "^1.33.0"
+  }
+}
