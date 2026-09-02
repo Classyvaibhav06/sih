@@ -3,11 +3,11 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
-  Brain, Send, Mic, Sparkles, BookOpen, RefreshCw, Target,
+  Brain, Send, Sparkles, BookOpen, RefreshCw, Target,
   Lightbulb, HelpCircle, FileText, Loader2,
   RotateCcw, Copy, Check,
-  LayoutDashboard, Zap, BarChart3, Award, PanelRight, ChevronRight,
-  Sliders, Layers, ArrowUpRight
+  LayoutDashboard, Zap, BarChart3, Award, Layers,
+  ArrowUpRight, ChevronDown, ChevronUp, Activity, ShieldCheck, X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -37,12 +37,12 @@ interface Source {
 }
 
 const QUICK_ACTIONS = [
-  { label: "Explain simply", icon: Lightbulb, prompt: "Explain this in the simplest possible way with an easy analogy" },
-  { label: "Show diagram", icon: Layers, prompt: "Show a visual concept diagram using Mermaid to explain how this works" },
-  { label: "Quiz me", icon: Target, prompt: "Ask me a targeted practice question on this concept to test my understanding" },
-  { label: "Give example", icon: BookOpen, prompt: "Give me a real-world code example that makes this crystal clear" },
-  { label: "Hint", icon: HelpCircle, prompt: "Give me a Socratic hint without giving away the full answer" },
-  { label: "Compare concepts", icon: RefreshCw, prompt: "Compare this with a related concept I might confuse it with" },
+  { label: "Explain simply", icon: Lightbulb, prompt: "Explain this in the simplest possible way with an easy real-world analogy" },
+  { label: "Show visual diagram", icon: Layers, prompt: "Show an interactive visual concept diagram using Mermaid to explain how this works step by step" },
+  { label: "Quiz my understanding", icon: Target, prompt: "Ask me a targeted practice question on this concept to test my understanding" },
+  { label: "Real-world code example", icon: BookOpen, prompt: "Give me a practical, production-grade code example that makes this crystal clear" },
+  { label: "Socratic hint", icon: HelpCircle, prompt: "Give me a step-by-step hint to solve this without giving away the full answer" },
+  { label: "Compare with related concept", icon: RefreshCw, prompt: "Compare this with a related concept that students commonly confuse it with" },
 ];
 
 const CONTEXT = {
@@ -52,8 +52,8 @@ const CONTEXT = {
   subtopic: "Tree Traversal & Call Stacks",
   previousMistake: "Confused DFS with BFS traversal in the last diagnostic drill",
   prerequisites: [
-    { name: "Pointers & References", mastery: 85, status: "Mastered" },
-    { name: "Function Call Stacks", mastery: 64, status: "Proficient" },
+    { name: "Pointers & Memory References", mastery: 85, status: "Mastered" },
+    { name: "Function Call Stack Frames", mastery: 64, status: "Proficient" },
     { name: "Recursive Base Cases", mastery: 43, status: "Needs Practice" },
   ],
 };
@@ -214,7 +214,8 @@ export default function AITutorPage() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [showContextPanel, setShowContextPanel] = useState(true);
+  const [showGraphDrawer, setShowGraphDrawer] = useState(false);
+  const [showHud, setShowHud] = useState(true);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -392,9 +393,9 @@ export default function AITutorPage() {
         </div>
       </aside>
 
-      {/* ─── Central Chat & Work Area ──────────────────────────────────────── */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden min-w-0">
-        {/* Sleek Header */}
+      {/* ─── Main Chat Window ──────────────────────────────────────────────── */}
+      <div className="flex-1 flex flex-col h-full overflow-hidden min-w-0 relative">
+        {/* Top Header */}
         <header className="h-16 px-6 border-b border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md flex items-center justify-between shrink-0 z-10">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center">
@@ -420,9 +421,14 @@ export default function AITutorPage() {
           </div>
 
           <div className="flex items-center gap-2.5">
-            <Badge variant="blue" className="hidden sm:inline-flex gap-1 items-center text-[11px] px-2.5 py-1">
-              <Sparkles size={12} /> Socratic Mode
-            </Badge>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowGraphDrawer(!showGraphDrawer)}
+              className="hidden sm:flex items-center gap-1.5 h-9 rounded-xl text-xs bg-blue-50/50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 border-blue-200/80 dark:border-blue-800/80 hover:bg-blue-100 dark:hover:bg-blue-950/60"
+            >
+              <Activity size={14} /> <span>Cognitive Graph (BKT)</span>
+            </Button>
 
             <Button
               variant="outline"
@@ -434,184 +440,206 @@ export default function AITutorPage() {
               <RotateCcw size={13} /> <span className="hidden sm:inline">Reset</span>
             </Button>
 
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setShowContextPanel(!showContextPanel)}
-              className={`h-9 w-9 rounded-xl text-neutral-700 dark:text-neutral-300 hidden lg:flex ${showContextPanel ? "bg-neutral-100 dark:bg-neutral-800" : ""}`}
-              title={showContextPanel ? "Hide Cognitive Context Panel" : "Show Cognitive Context Panel"}
-            >
-              <PanelRight size={15} />
-            </Button>
-
             <ThemeToggle />
           </div>
         </header>
 
-        {/* Workspace Body: Chat Stream + Context Panel */}
-        <div className="flex flex-1 overflow-hidden">
-          {/* Main Chat Stream Container */}
-          <div className="flex-1 flex flex-col h-full overflow-hidden min-w-0">
-            {/* Scrollable Conversation View */}
-            <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-6 space-y-6 bg-neutral-50/60 dark:bg-neutral-950/60">
-              <div className="max-w-4xl mx-auto space-y-6 pb-6">
-                {messages.map(m => {
-                  const isUser = m.role === "user";
-                  return (
-                    <div key={m.id} className={`flex gap-3.5 ${isUser ? "justify-end" : "justify-start"}`}>
-                      {!isUser && (
-                        <Avatar className="h-8 w-8 shrink-0 mt-1 shadow-sm">
-                          <AvatarFallback className="bg-blue-600 text-white text-xs font-bold">
-                            AI
-                          </AvatarFallback>
-                        </Avatar>
-                      )}
-
-                      <div className={`space-y-1.5 ${isUser ? "max-w-2xl ml-auto" : "w-full max-w-3xl"}`}>
-                        <div
-                          className={`p-4 sm:p-5 rounded-2xl text-xs sm:text-sm ${
-                            isUser
-                              ? "bg-blue-600 text-white rounded-tr-sm shadow-md font-medium leading-relaxed"
-                              : "bg-white dark:bg-neutral-900 border border-neutral-200/90 dark:border-neutral-800 rounded-tl-sm shadow-sm"
-                          }`}
-                        >
-                          {m.isStreaming ? <TypingDots /> : <MessageContent content={m.content} />}
-                        </div>
-
-                        {!isUser && !m.isStreaming && (
-                          <div className="flex items-center gap-3 px-1.5 pt-0.5 text-[11px] text-neutral-400">
-                            <button
-                              onClick={() => copyToClipboard(m.content, m.id)}
-                              className="hover:text-neutral-700 dark:hover:text-neutral-200 flex items-center gap-1 transition-colors"
-                            >
-                              {copiedId === m.id ? <Check size={12} className="text-emerald-500" /> : <Copy size={12} />}
-                              {copiedId === m.id ? "Copied" : "Copy response"}
-                            </button>
-                          </div>
-                        )}
-                      </div>
-
-                      {isUser && (
-                        <Avatar className="h-8 w-8 shrink-0 mt-1 shadow-sm">
-                          <AvatarFallback className="bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 text-xs font-bold">
-                            AS
-                          </AvatarFallback>
-                        </Avatar>
-                      )}
-                    </div>
-                  );
-                })}
-                <div ref={bottomRef} className="h-4" />
-              </div>
+        {/* ─── Wide Horizontal Cognitive Mastery HUD Strip ─────────────────── */}
+        {showHud && (
+          <div className="shrink-0 border-b border-neutral-200/80 dark:border-neutral-800 bg-white/60 dark:bg-neutral-900/60 backdrop-blur-sm px-6 py-2.5 flex items-center justify-between flex-wrap gap-3 text-xs">
+            <div className="flex items-center gap-3">
+              <Badge variant="blue" className="text-[10px]">Active Concept</Badge>
+              <span className="font-semibold text-neutral-900 dark:text-neutral-100">
+                {CONTEXT.topic}
+              </span>
+              <span className="text-neutral-400">·</span>
+              <span className="text-neutral-500">{CONTEXT.subtopic}</span>
             </div>
 
-            {/* Bottom Controls Area */}
-            <div className="shrink-0 border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-xl z-10">
-              {/* Quick Action Suggestion Pills */}
-              <div className="px-4 sm:px-8 py-2.5 flex gap-2 overflow-x-auto border-b border-neutral-100 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-950/20">
-                {QUICK_ACTIONS.map(a => (
-                  <Button
-                    key={a.label}
-                    variant="outline"
-                    size="sm"
-                    onClick={() => send(a.prompt)}
-                    disabled={loading}
-                    className="h-7 text-xs gap-1.5 shrink-0 rounded-lg bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 hover:border-blue-400 dark:hover:border-blue-500"
-                  >
-                    <a.icon size={12} className="text-blue-500" /> {a.label}
-                  </Button>
-                ))}
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2.5">
+                <span className="text-neutral-500">Mastery:</span>
+                <div className="w-28">
+                  <Progress value={CONTEXT.mastery} className="h-2" />
+                </div>
+                <span className="font-bold text-blue-600 dark:text-blue-400">{CONTEXT.mastery}%</span>
               </div>
 
-              {/* Prompt Composer */}
-              <div className="p-4 sm:p-6 pt-3">
-                <div className="max-w-4xl mx-auto">
-                  <div className="relative flex items-center rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 focus-within:ring-2 focus-within:ring-blue-500/50 focus-within:border-blue-500 transition-all shadow-inner">
-                    <textarea
-                      ref={inputRef}
-                      value={input}
-                      onChange={e => setInput(e.target.value)}
-                      onKeyDown={e => {
-                        if (e.key === "Enter" && !e.shiftKey) {
-                          e.preventDefault();
-                          send(input);
-                        }
-                      }}
-                      placeholder="Ask a question, request a diagram, or explain where you're stuck..."
-                      rows={2}
-                      className="flex-1 p-3.5 bg-transparent text-xs sm:text-sm text-neutral-900 dark:text-neutral-100 focus:outline-none resize-none placeholder:text-neutral-400"
-                    />
-                    <div className="pr-3 flex items-center gap-2">
-                      <Button
-                        onClick={() => send(input)}
-                        disabled={loading || !input.trim()}
-                        className="h-10 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-md shadow-blue-600/20 transition-all hover:scale-105 active:scale-95"
-                      >
-                        {loading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
-                      </Button>
+              <button
+                onClick={() => setShowHud(false)}
+                className="text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
+                title="Collapse banner"
+              >
+                <ChevronUp size={14} />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ─── Scrollable Chat Feed ────────────────────────────────────────── */}
+        <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-6 space-y-6 bg-neutral-50/60 dark:bg-neutral-950/60">
+          <div className="max-w-4xl mx-auto space-y-6 pb-6">
+            {messages.map(m => {
+              const isUser = m.role === "user";
+              return (
+                <div key={m.id} className={`flex gap-3.5 ${isUser ? "justify-end" : "justify-start"}`}>
+                  {!isUser && (
+                    <Avatar className="h-8 w-8 shrink-0 mt-1 shadow-sm">
+                      <AvatarFallback className="bg-blue-600 text-white text-xs font-bold">
+                        AI
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
+
+                  <div className={`space-y-1.5 ${isUser ? "max-w-2xl ml-auto" : "w-full max-w-3xl"}`}>
+                    <div
+                      className={`p-4 sm:p-5 rounded-2xl text-xs sm:text-sm ${
+                        isUser
+                          ? "bg-blue-600 text-white rounded-tr-sm shadow-md font-medium leading-relaxed"
+                          : "bg-white dark:bg-neutral-900 border border-neutral-200/90 dark:border-neutral-800 rounded-tl-sm shadow-sm"
+                      }`}
+                    >
+                      {m.isStreaming ? <TypingDots /> : <MessageContent content={m.content} />}
                     </div>
+
+                    {!isUser && !m.isStreaming && (
+                      <div className="flex items-center gap-3 px-1.5 pt-0.5 text-[11px] text-neutral-400">
+                        <button
+                          onClick={() => copyToClipboard(m.content, m.id)}
+                          className="hover:text-neutral-700 dark:hover:text-neutral-200 flex items-center gap-1 transition-colors"
+                        >
+                          {copiedId === m.id ? <Check size={12} className="text-emerald-500" /> : <Copy size={12} />}
+                          {copiedId === m.id ? "Copied" : "Copy response"}
+                        </button>
+                      </div>
+                    )}
                   </div>
-                  <div className="flex items-center justify-between pt-2 px-1 text-[11px] text-neutral-400">
-                    <span>Press <strong>Enter</strong> to send, <strong>Shift + Enter</strong> for new line</span>
-                    <span className="hidden sm:inline">Powered by Bayesian Knowledge Tracing</span>
-                  </div>
+
+                  {isUser && (
+                    <Avatar className="h-8 w-8 shrink-0 mt-1 shadow-sm">
+                      <AvatarFallback className="bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 text-xs font-bold">
+                        AS
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
                 </div>
+              );
+            })}
+            <div ref={bottomRef} className="h-4" />
+          </div>
+        </div>
+
+        {/* ─── Bottom Controls ─────────────────────────────────────────────── */}
+        <div className="shrink-0 border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 shadow-xl z-10">
+          {/* Quick Action Suggestion Pills */}
+          <div className="px-4 sm:px-8 py-2.5 flex gap-2 overflow-x-auto border-b border-neutral-100 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-950/20">
+            {QUICK_ACTIONS.map(a => (
+              <Button
+                key={a.label}
+                variant="outline"
+                size="sm"
+                onClick={() => send(a.prompt)}
+                disabled={loading}
+                className="h-7 text-xs gap-1.5 shrink-0 rounded-lg bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 hover:border-blue-400 dark:hover:border-blue-500"
+              >
+                <a.icon size={12} className="text-blue-500" /> {a.label}
+              </Button>
+            ))}
+          </div>
+
+          {/* Prompt Composer */}
+          <div className="p-4 sm:p-6 pt-3">
+            <div className="max-w-4xl mx-auto">
+              <div className="relative flex items-center rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 focus-within:ring-2 focus-within:ring-blue-500/50 focus-within:border-blue-500 transition-all shadow-inner">
+                <textarea
+                  ref={inputRef}
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={e => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      send(input);
+                    }
+                  }}
+                  placeholder="Ask a question, request a diagram, or explain where you're stuck..."
+                  rows={2}
+                  className="flex-1 p-3.5 bg-transparent text-xs sm:text-sm text-neutral-900 dark:text-neutral-100 focus:outline-none resize-none placeholder:text-neutral-400"
+                />
+                <div className="pr-3 flex items-center gap-2">
+                  <Button
+                    onClick={() => send(input)}
+                    disabled={loading || !input.trim()}
+                    className="h-10 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-md shadow-blue-600/20 transition-all hover:scale-105 active:scale-95"
+                  >
+                    {loading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                  </Button>
+                </div>
+              </div>
+              <div className="flex items-center justify-between pt-2 px-1 text-[11px] text-neutral-400">
+                <span>Press <strong>Enter</strong> to send, <strong>Shift + Enter</strong> for new line</span>
+                <span className="hidden sm:inline">Powered by Bayesian Knowledge Tracing</span>
               </div>
             </div>
           </div>
+        </div>
 
-          {/* ─── Right Cognitive Context Sidebar (Utilizing Screen Space) ─── */}
-          {showContextPanel && (
-            <aside className="w-80 border-l border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-5 overflow-y-auto hidden lg:flex flex-col shrink-0 gap-5">
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-bold uppercase tracking-wider text-neutral-500">
-                    Cognitive Context
+        {/* ─── Slide-Over Cognitive Graph Drawer (Clean & Non-Intrusive) ────── */}
+        {showGraphDrawer && (
+          <div className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-xs animate-in fade-in">
+            <div className="w-full max-w-md bg-white dark:bg-neutral-900 h-full shadow-2xl border-l border-neutral-200 dark:border-neutral-800 p-6 overflow-y-auto flex flex-col gap-5 animate-in slide-in-from-right">
+              <div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-neutral-800">
+                <div className="flex items-center gap-2">
+                  <Activity className="text-blue-500" size={18} />
+                  <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                    Bayesian Cognitive Profile
                   </span>
-                  <Badge variant="blue" className="text-[10px]">Active Topic</Badge>
                 </div>
-                <Card className="border-neutral-200/90 dark:border-neutral-800 shadow-sm">
-                  <CardContent className="p-4 space-y-3">
-                    <div>
-                      <div className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                        {CONTEXT.topic}
-                      </div>
-                      <div className="text-[11px] text-neutral-500">{CONTEXT.course}</div>
-                    </div>
-                    <div className="space-y-1.5">
-                      <div className="flex justify-between text-[11px]">
-                        <span className="text-neutral-500">Mastery Level</span>
-                        <span className="font-bold text-blue-600 dark:text-blue-400">{CONTEXT.mastery}%</span>
-                      </div>
-                      <Progress value={CONTEXT.mastery} className="h-2" />
-                    </div>
-                  </CardContent>
-                </Card>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowGraphDrawer(false)}
+                  className="h-8 w-8 rounded-lg"
+                >
+                  <X size={16} />
+                </Button>
               </div>
+
+              <Card className="border-neutral-200 dark:border-neutral-800">
+                <CardContent className="p-4 space-y-2.5">
+                  <div className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                    {CONTEXT.topic}
+                  </div>
+                  <div className="text-[11px] text-neutral-500">{CONTEXT.course}</div>
+                  <div className="space-y-1 pt-1">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-neutral-500">Mastery Level</span>
+                      <span className="font-bold text-blue-600 dark:text-blue-400">{CONTEXT.mastery}%</span>
+                    </div>
+                    <Progress value={CONTEXT.mastery} className="h-2" />
+                  </div>
+                </CardContent>
+              </Card>
 
               <div>
                 <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-2">
-                  Prerequisite Graph (BKT)
+                  Prerequisite Dependencies (BKT)
                 </div>
                 <div className="space-y-2">
                   {CONTEXT.prerequisites.map(p => (
                     <div
                       key={p.name}
-                      className="p-3 rounded-xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-50/60 dark:bg-neutral-950/40 text-xs space-y-1.5"
+                      className="p-3.5 rounded-xl border border-neutral-200/80 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 text-xs space-y-2"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-medium text-neutral-900 dark:text-neutral-100 truncate">
+                        <span className="font-semibold text-neutral-900 dark:text-neutral-100 truncate">
                           {p.name}
                         </span>
-                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
-                          p.mastery >= 80
-                            ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400"
-                            : p.mastery >= 60
-                            ? "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400"
-                            : "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400"
-                        }`}>
-                          {p.mastery}%
-                        </span>
+                        <Badge
+                          variant={p.mastery >= 80 ? "default" : p.mastery >= 60 ? "secondary" : "warning"}
+                          className="text-[10px]"
+                        >
+                          {p.mastery}% · {p.status}
+                        </Badge>
                       </div>
                       <Progress value={p.mastery} className="h-1.5" />
                     </div>
@@ -623,29 +651,29 @@ export default function AITutorPage() {
                 <div className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-2">
                   Diagnosed Bottleneck
                 </div>
-                <div className="p-3.5 rounded-xl border border-amber-200 dark:border-amber-900/60 bg-amber-50/50 dark:bg-amber-950/20 text-amber-950 dark:text-amber-200 text-xs leading-relaxed">
-                  <p className="font-medium mb-1">⚠️ Previous Drill Struggle:</p>
+                <div className="p-4 rounded-xl border border-amber-200 dark:border-amber-900/60 bg-amber-50/70 dark:bg-amber-950/30 text-amber-950 dark:text-amber-200 text-xs leading-relaxed">
+                  <p className="font-semibold mb-1">⚠️ Prior Drill Misconception:</p>
                   <p className="text-[11px] opacity-90">{CONTEXT.previousMistake}</p>
                 </div>
               </div>
 
-              <div className="mt-auto space-y-2 pt-2">
+              <div className="mt-auto pt-4 space-y-2">
                 <Link href="/dashboard/practice" className="block">
-                  <Button variant="outline" className="w-full justify-between h-9 text-xs rounded-xl">
-                    <span>Take Adaptive Drill</span>
+                  <Button className="w-full justify-between h-10 text-xs rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold">
+                    <span>Take Adaptive Diagnostic Drill</span>
                     <ArrowUpRight size={14} />
                   </Button>
                 </Link>
                 <Link href="/dashboard/revision" className="block">
-                  <Button variant="outline" className="w-full justify-between h-9 text-xs rounded-xl">
+                  <Button variant="outline" className="w-full justify-between h-10 text-xs rounded-xl">
                     <span>Review Spaced Flashcards</span>
                     <ArrowUpRight size={14} />
                   </Button>
                 </Link>
               </div>
-            </aside>
-          )}
-        </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
