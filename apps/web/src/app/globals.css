@@ -183,9 +183,22 @@
   --danger-border: var(--destructive-border);
 }
 
-/* ─── Base Styles ─────────────────────────────────────────────────────────── */
+/* ─── Global Reset & Font ─────────────────────────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
+}
+
+/* Suppress any rogue mermaid error popups */
+[id^="dmermaid"],
+[id*="mermaid-error"],
+.error-icon,
+svg[id^="dmermaid"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  width: 0 !important;
 }
 
 html {

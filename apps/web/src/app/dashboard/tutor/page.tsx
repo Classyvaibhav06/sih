@@ -333,40 +333,71 @@ export default function AITutorPage() {
   };
 
   return (
-    <div className="app-shell">
+    <div className="flex h-screen w-full overflow-hidden bg-neutral-50 dark:bg-neutral-950">
       {/* ─── Sidebar ──────────────────────────────────────────────────────── */}
-      <aside className="app-sidebar">
-        <div className="flex items-center gap-2.5 px-3 py-2 mb-6">
+      <aside className="w-64 border-r border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 flex flex-col shrink-0 h-full p-4 overflow-y-auto">
+        <div className="flex items-center gap-2.5 px-2 py-2 mb-6">
           <div className="w-8 h-8 rounded-lg bg-neutral-950 dark:bg-neutral-50 text-neutral-50 dark:text-neutral-950 flex items-center justify-center font-bold">
             <Brain size={16} />
           </div>
-          <span className="font-extrabold text-sm tracking-tight text-neutral-900 dark:text-neutral-50">AdaptiveX AI</span>
+          <span className="font-extrabold text-sm tracking-tight text-neutral-900 dark:text-neutral-50">
+            AdaptiveX AI
+          </span>
         </div>
 
-        <div className="nav-section-label">Learning</div>
-        <Link href="/dashboard" className="nav-item">
-          <LayoutDashboard size={16} className="nav-icon" /> Dashboard
-        </Link>
-        <Link href="/dashboard/path" className="nav-item">
-          <Target size={16} className="nav-icon" /> Learning Path
-        </Link>
-        <Link href="/dashboard/tutor" className="nav-item active">
-          <Brain size={16} className="nav-icon" /> AI Tutor
-        </Link>
-        <Link href="/dashboard/practice" className="nav-item">
-          <Zap size={16} className="nav-icon" /> Practice
-        </Link>
-        <Link href="/dashboard/revision" className="nav-item">
-          <RefreshCw size={16} className="nav-icon" /> Revision
-        </Link>
+        <div className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider px-2 mb-2">
+          Learning
+        </div>
+        <div className="space-y-1">
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+          >
+            <LayoutDashboard size={15} /> Dashboard
+          </Link>
+          <Link
+            href="/dashboard/path"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+          >
+            <Target size={15} /> Learning Path
+          </Link>
+          <Link
+            href="/dashboard/tutor"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold bg-neutral-100 dark:bg-neutral-800 text-neutral-950 dark:text-neutral-50"
+          >
+            <Brain size={15} className="text-blue-600 dark:text-blue-400" /> AI Tutor
+          </Link>
+          <Link
+            href="/dashboard/practice"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+          >
+            <Zap size={15} /> Practice
+          </Link>
+          <Link
+            href="/dashboard/revision"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+          >
+            <RefreshCw size={15} /> Revision
+          </Link>
+        </div>
 
-        <div className="nav-section-label mt-3">Account</div>
-        <Link href="/dashboard" className="nav-item">
-          <BarChart3 size={16} className="nav-icon" /> Analytics
-        </Link>
-        <Link href="/dashboard" className="nav-item">
-          <Award size={16} className="nav-icon" /> Achievements
-        </Link>
+        <div className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider px-2 mt-6 mb-2">
+          Account
+        </div>
+        <div className="space-y-1">
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+          >
+            <BarChart3 size={15} /> Analytics
+          </Link>
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+          >
+            <Award size={15} /> Achievements
+          </Link>
+        </div>
 
         <div className="mt-auto pt-4">
           <Separator className="mb-3" />
@@ -377,120 +408,131 @@ export default function AITutorPage() {
               </AvatarFallback>
             </Avatar>
             <div className="overflow-hidden">
-              <div className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 truncate">Aarav Sharma</div>
+              <div className="text-xs font-semibold text-neutral-900 dark:text-neutral-100 truncate">
+                Aarav Sharma
+              </div>
               <div className="text-[11px] text-neutral-500">Level 12 · 3,240 XP</div>
             </div>
           </div>
         </div>
       </aside>
 
-      {/* ─── Main Content ─────────────────────────────────────────────────── */}
-      <div className="app-main">
-        <header className="app-header justify-between">
+      {/* ─── Main Chat Panel ─────────────────────────────────────────────── */}
+      <div className="flex-1 flex flex-col h-full overflow-hidden min-w-0">
+        {/* Header */}
+        <header className="h-16 px-6 border-b border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md flex items-center justify-between shrink-0 z-10">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center">
               <Brain size={18} />
             </div>
             <div>
-              <div className="text-xs font-bold text-neutral-900 dark:text-neutral-100">Socratic AI Tutor</div>
+              <div className="text-xs font-bold text-neutral-900 dark:text-neutral-100">
+                Socratic AI Tutor
+              </div>
               <p className="text-[11px] text-neutral-500">Active model: z-ai/glm-5.3-free (TokenRouter)</p>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
             <Badge variant="blue" className="text-[10px]">Context Aware</Badge>
-            <Button variant="outline" size="sm" onClick={() => setMessages(messages.slice(0, 1))} className="gap-1.5 h-8 text-xs">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setMessages(messages.slice(0, 1))}
+              className="gap-1.5 h-8 text-xs"
+            >
               <RotateCcw size={13} /> Reset Chat
             </Button>
           </div>
         </header>
 
-        <div className="flex flex-1 overflow-hidden">
-          {/* Chat Main Stream */}
-          <div className="flex-1 flex flex-col overflow-hidden bg-neutral-50/50 dark:bg-neutral-950/40">
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
-              {messages.map(m => {
-                const isUser = m.role === "user";
-                return (
-                  <div key={m.id} className={`flex gap-3 ${isUser ? "justify-end" : "justify-start"}`}>
-                    {!isUser && (
-                      <Avatar className="h-8 w-8 shrink-0 mt-0.5">
-                        <AvatarFallback className="bg-blue-600 text-white text-xs font-bold">
-                          AI
-                        </AvatarFallback>
-                      </Avatar>
-                    )}
+        {/* Scrollable Message List */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-neutral-50/50 dark:bg-neutral-950/40">
+          <div className="max-w-4xl mx-auto space-y-4 pb-4">
+            {messages.map(m => {
+              const isUser = m.role === "user";
+              return (
+                <div key={m.id} className={`flex gap-3 ${isUser ? "justify-end" : "justify-start"}`}>
+                  {!isUser && (
+                    <Avatar className="h-8 w-8 shrink-0 mt-0.5">
+                      <AvatarFallback className="bg-blue-600 text-white text-xs font-bold">
+                        AI
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
 
-                    <div className="max-w-2xl space-y-2">
-                      <div
-                        className={`p-4 rounded-2xl text-xs sm:text-sm ${
-                          isUser
-                            ? "bg-neutral-900 text-neutral-50 dark:bg-neutral-100 dark:text-neutral-900 rounded-tr-none shadow-sm"
-                            : "bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 rounded-tl-none shadow-sm"
-                        }`}
-                      >
-                        {m.isStreaming ? <TypingDots /> : <MessageContent content={m.content} />}
-                      </div>
-
-                      {!isUser && !m.isStreaming && (
-                        <div className="flex items-center gap-2 px-1 text-[11px] text-neutral-400">
-                          <button
-                            onClick={() => copyToClipboard(m.content, m.id)}
-                            className="hover:text-neutral-700 dark:hover:text-neutral-200 flex items-center gap-1"
-                          >
-                            {copiedId === m.id ? <Check size={12} className="text-emerald-500" /> : <Copy size={12} />}
-                            {copiedId === m.id ? "Copied" : "Copy"}
-                          </button>
-                        </div>
-                      )}
+                  <div className="max-w-3xl space-y-1.5 w-full">
+                    <div
+                      className={`p-4 rounded-2xl text-xs sm:text-sm ${
+                        isUser
+                          ? "bg-neutral-900 text-neutral-50 dark:bg-neutral-100 dark:text-neutral-900 rounded-tr-none shadow-sm ml-auto max-w-xl"
+                          : "bg-white dark:bg-neutral-900 border border-neutral-200/80 dark:border-neutral-800 rounded-tl-none shadow-sm"
+                      }`}
+                    >
+                      {m.isStreaming ? <TypingDots /> : <MessageContent content={m.content} />}
                     </div>
+
+                    {!isUser && !m.isStreaming && (
+                      <div className="flex items-center gap-2 px-1 text-[11px] text-neutral-400">
+                        <button
+                          onClick={() => copyToClipboard(m.content, m.id)}
+                          className="hover:text-neutral-700 dark:hover:text-neutral-200 flex items-center gap-1"
+                        >
+                          {copiedId === m.id ? <Check size={12} className="text-emerald-500" /> : <Copy size={12} />}
+                          {copiedId === m.id ? "Copied" : "Copy"}
+                        </button>
+                      </div>
+                    )}
                   </div>
-                );
-              })}
-              <div ref={bottomRef} />
-            </div>
+                </div>
+              );
+            })}
+            <div ref={bottomRef} className="h-4" />
+          </div>
+        </div>
 
-            {/* Quick Action Pills */}
-            <div className="px-4 sm:px-6 py-2 flex gap-2 overflow-x-auto shrink-0 border-t border-neutral-200/60 dark:border-neutral-800 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm">
-              {QUICK_ACTIONS.map(a => (
-                <Button
-                  key={a.label}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => send(a.prompt)}
-                  disabled={loading}
-                  className="h-7 text-xs gap-1.5 shrink-0"
-                >
-                  <a.icon size={13} /> {a.label}
-                </Button>
-              ))}
-            </div>
+        {/* Fixed Bottom Controls */}
+        <div className="shrink-0 border-t border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 z-10">
+          {/* Quick Action Pills */}
+          <div className="px-4 sm:px-6 py-2 flex gap-2 overflow-x-auto border-b border-neutral-100 dark:border-neutral-800/80 bg-neutral-50/50 dark:bg-neutral-950/20">
+            {QUICK_ACTIONS.map(a => (
+              <Button
+                key={a.label}
+                variant="outline"
+                size="sm"
+                onClick={() => send(a.prompt)}
+                disabled={loading}
+                className="h-7 text-xs gap-1.5 shrink-0 bg-white dark:bg-neutral-900"
+              >
+                <a.icon size={13} /> {a.label}
+              </Button>
+            ))}
+          </div>
 
-            {/* Prompt Composer */}
-            <div className="p-4 sm:p-6 pt-2 shrink-0 bg-white dark:bg-neutral-900 border-t border-neutral-200/80 dark:border-neutral-800">
-              <div className="flex gap-2 max-w-4xl mx-auto">
-                <textarea
-                  ref={inputRef}
-                  value={input}
-                  onChange={e => setInput(e.target.value)}
-                  onKeyDown={e => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      send(input);
-                    }
-                  }}
-                  placeholder="Ask a question or explain what you're stuck on..."
-                  rows={2}
-                  className="flex-1 p-3 text-xs sm:text-sm rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 focus:outline-none focus:ring-1 focus:ring-neutral-400 resize-none"
-                />
-                <Button
-                  onClick={() => send(input)}
-                  disabled={loading || !input.trim()}
-                  className="h-auto px-5"
-                >
-                  {loading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
-                </Button>
-              </div>
+          {/* Prompt Composer */}
+          <div className="p-4 sm:p-6 pt-3">
+            <div className="flex gap-2 max-w-4xl mx-auto">
+              <textarea
+                ref={inputRef}
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                onKeyDown={e => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    send(input);
+                  }
+                }}
+                placeholder="Ask a question, request a diagram, or explain what you're stuck on..."
+                rows={2}
+                className="flex-1 p-3 text-xs sm:text-sm rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-950 focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
+              />
+              <Button
+                onClick={() => send(input)}
+                disabled={loading || !input.trim()}
+                className="h-auto px-5 bg-blue-600 hover:bg-blue-500 text-white font-semibold"
+              >
+                {loading ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+              </Button>
             </div>
           </div>
         </div>
