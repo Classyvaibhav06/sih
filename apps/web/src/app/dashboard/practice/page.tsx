@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface Question {
   id: string;
@@ -232,6 +233,7 @@ export default function PracticePage() {
             <Badge variant="blue" className="gap-1.5 py-1 px-3">
               <Award size={14} /> {score * 50 + 200} XP
             </Badge>
+            <ThemeToggle />
           </div>
         </header>
 
