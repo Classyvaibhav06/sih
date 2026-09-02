@@ -10,7 +10,6 @@ interface MermaidProps {
 }
 
 export default function Mermaid({ chart }: MermaidProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [svg, setSvg] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
   const { theme, resolvedTheme } = useTheme();
@@ -23,28 +22,40 @@ export default function Mermaid({ chart }: MermaidProps) {
         startOnLoad: false,
         suppressErrorRendering: true,
         securityLevel: "loose",
-        theme: isDark ? "dark" : "neutral",
+        theme: isDark ? "dark" : "default",
         fontFamily: "var(--font-geist), system-ui, sans-serif",
         themeVariables: isDark
           ? {
               darkMode: true,
-              background: "#171717",
-              primaryColor: "#3b82f6",
+              background: "#1e293b",
+              primaryColor: "#1e3a8a",
               primaryTextColor: "#f8fafc",
               primaryBorderColor: "#60a5fa",
-              lineColor: "#94a3b8",
-              secondaryColor: "#1e293b",
+              lineColor: "#93c5fd",
+              secondaryColor: "#334155",
               tertiaryColor: "#0f172a",
+              textColor: "#f8fafc",
+              mainBkg: "#1e293b",
+              nodeBorder: "#60a5fa",
+              clusterBkg: "#0f172a",
+              clusterBorder: "#334155",
+              fontSize: "13px",
             }
           : {
               darkMode: false,
-              background: "#ffffff",
-              primaryColor: "#2563eb",
+              background: "#f0f9ff",
+              primaryColor: "#dbeafe",
               primaryTextColor: "#0f172a",
-              primaryBorderColor: "#3b82f6",
-              lineColor: "#64748b",
+              primaryBorderColor: "#2563eb",
+              lineColor: "#2563eb",
               secondaryColor: "#f1f5f9",
-              tertiaryColor: "#f8fafc",
+              tertiaryColor: "#ffffff",
+              textColor: "#0f172a",
+              mainBkg: "#eff6ff",
+              nodeBorder: "#2563eb",
+              clusterBkg: "#f8fafc",
+              clusterBorder: "#cbd5e1",
+              fontSize: "13px",
             },
       });
     } catch {
@@ -59,13 +70,6 @@ export default function Mermaid({ chart }: MermaidProps) {
       if (!cleanChart) return;
 
       try {
-        // First validate syntax without rendering to avoid DOM pollution
-        const valid = await mermaid.parse(cleanChart).catch(() => false);
-        if (!valid) {
-          if (isMounted) setError(true);
-          return;
-        }
-
         const { svg: renderedSvg } = await mermaid.render(uniqueId, cleanChart);
         if (isMounted) {
           setSvg(renderedSvg);
@@ -76,7 +80,6 @@ export default function Mermaid({ chart }: MermaidProps) {
           setError(true);
         }
       } finally {
-        // Clean up any stray error elements Mermaid might have appended to body
         if (typeof document !== "undefined") {
           const rogueElements = document.querySelectorAll(
             `[id^="d${uniqueId}"], [id^="dmermaid"], .error-icon`
@@ -103,15 +106,15 @@ export default function Mermaid({ chart }: MermaidProps) {
     return (
       <div className="bg-neutral-950 text-neutral-100 p-3.5 rounded-xl font-mono text-xs leading-relaxed overflow-x-auto border border-neutral-800 my-2">
         <div className="flex items-center gap-1.5 text-neutral-400 text-[10px] uppercase font-bold tracking-wider mb-1.5">
-          <GitBranch size={12} /> Visual Diagram (Raw Source)
+          <GitBranch size={12} /> Visual Diagram
         </div>
-        <pre className="m-0 font-mono whitespace-pre">{chart}</pre>
+        <pre className="m-0 font-mono whitespace-pre leading-relaxed">{chart}</pre>
       </div>
     );
   }
 
   return (
-    <div className="my-3 rounded-2xl border border-neutral-200/90 dark:border-neutral-800 bg-white dark:bg-neutral-900/90 p-4 shadow-sm overflow-hidden">
+    <div className="my-3 rounded-2xl border border-neutral-200/90 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-4 shadow-sm overflow-hidden">
       <div className="flex items-center justify-between pb-3 mb-2 border-b border-neutral-100 dark:border-neutral-800">
         <div className="flex items-center gap-1.5 text-xs font-bold text-blue-600 dark:text-blue-400">
           <GitBranch size={14} /> Interactive Visual Concept Diagram
@@ -122,8 +125,7 @@ export default function Mermaid({ chart }: MermaidProps) {
       </div>
 
       <div
-        ref={containerRef}
-        className="flex justify-center items-center overflow-x-auto py-2 max-h-[420px] [&>svg]:max-w-full [&>svg]:h-auto"
+        className="flex justify-center items-center overflow-x-auto py-2 min-h-[120px] max-h-[460px] [&>svg]:max-w-full [&>svg]:h-auto [&_text]:fill-current text-neutral-900 dark:text-neutral-100"
         dangerouslySetInnerHTML={{ __html: svg }}
       />
     </div>

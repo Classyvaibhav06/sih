@@ -7,10 +7,10 @@ import {
   Lightbulb, HelpCircle, FileText, Loader2,
   RotateCcw, Copy, Check,
   LayoutDashboard, Zap, BarChart3, Award, Layers,
-  ArrowUpRight, ChevronDown, ChevronUp, Activity, ShieldCheck, X
+  ArrowUpRight, Activity, X, ChevronUp
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -309,9 +309,9 @@ export default function AITutorPage() {
   };
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-neutral-50 dark:bg-neutral-950 font-sans">
+    <div className="fixed inset-0 flex h-screen w-screen overflow-hidden bg-neutral-50 dark:bg-neutral-950 font-sans">
       {/* ─── Left Navigation Sidebar ───────────────────────────────────────── */}
-      <aside className="w-60 border-r border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 flex flex-col shrink-0 h-full p-4 overflow-y-auto">
+      <aside className="w-60 border-r border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 flex flex-col shrink-0 h-full p-4 overflow-y-auto z-20">
         <div className="flex items-center gap-2.5 px-2 py-2 mb-6">
           <div className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shadow-md shadow-blue-600/20">
             <Brain size={18} />
@@ -394,7 +394,7 @@ export default function AITutorPage() {
       </aside>
 
       {/* ─── Main Chat Window ──────────────────────────────────────────────── */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden min-w-0 relative">
+      <div className="flex-1 flex flex-col h-full max-h-screen overflow-hidden min-w-0 relative">
         {/* Top Header */}
         <header className="h-16 px-6 border-b border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md flex items-center justify-between shrink-0 z-10">
           <div className="flex items-center gap-3">
@@ -446,7 +446,7 @@ export default function AITutorPage() {
 
         {/* ─── Wide Horizontal Cognitive Mastery HUD Strip ─────────────────── */}
         {showHud && (
-          <div className="shrink-0 border-b border-neutral-200/80 dark:border-neutral-800 bg-white/60 dark:bg-neutral-900/60 backdrop-blur-sm px-6 py-2.5 flex items-center justify-between flex-wrap gap-3 text-xs">
+          <div className="shrink-0 border-b border-neutral-200/80 dark:border-neutral-800 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm px-6 py-2.5 flex items-center justify-between flex-wrap gap-3 text-xs z-10">
             <div className="flex items-center gap-3">
               <Badge variant="blue" className="text-[10px]">Active Concept</Badge>
               <span className="font-semibold text-neutral-900 dark:text-neutral-100">
@@ -477,7 +477,7 @@ export default function AITutorPage() {
         )}
 
         {/* ─── Scrollable Chat Feed ────────────────────────────────────────── */}
-        <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-6 space-y-6 bg-neutral-50/60 dark:bg-neutral-950/60">
+        <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-8 py-6 space-y-6 bg-neutral-50/60 dark:bg-neutral-950/60">
           <div className="max-w-4xl mx-auto space-y-6 pb-6">
             {messages.map(m => {
               const isUser = m.role === "user";
@@ -492,15 +492,15 @@ export default function AITutorPage() {
                   )}
 
                   <div className={`space-y-1.5 ${isUser ? "max-w-2xl ml-auto" : "w-full max-w-3xl"}`}>
-                    <div
-                      className={`p-4 sm:p-5 rounded-2xl text-xs sm:text-sm ${
-                        isUser
-                          ? "bg-blue-600 text-white rounded-tr-sm shadow-md font-medium leading-relaxed"
-                          : "bg-white dark:bg-neutral-900 border border-neutral-200/90 dark:border-neutral-800 rounded-tl-sm shadow-sm"
-                      }`}
-                    >
-                      {m.isStreaming ? <TypingDots /> : <MessageContent content={m.content} />}
-                    </div>
+                    {isUser ? (
+                      <div className="bg-blue-600 text-white rounded-2xl rounded-tr-sm p-4 text-xs sm:text-sm font-medium shadow-md leading-relaxed whitespace-pre-wrap select-text">
+                        {m.content}
+                      </div>
+                    ) : (
+                      <div className="bg-white dark:bg-neutral-900 border border-neutral-200/90 dark:border-neutral-800 rounded-2xl rounded-tl-sm p-4 sm:p-5 text-xs sm:text-sm shadow-sm">
+                        {m.isStreaming ? <TypingDots /> : <MessageContent content={m.content} />}
+                      </div>
+                    )}
 
                     {!isUser && !m.isStreaming && (
                       <div className="flex items-center gap-3 px-1.5 pt-0.5 text-[11px] text-neutral-400">
@@ -540,7 +540,7 @@ export default function AITutorPage() {
                 size="sm"
                 onClick={() => send(a.prompt)}
                 disabled={loading}
-                className="h-7 text-xs gap-1.5 shrink-0 rounded-lg bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 hover:border-blue-400 dark:hover:border-blue-500"
+                className="h-7 text-xs gap-1.5 shrink-0 rounded-lg bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-800 hover:border-blue-400 dark:hover:border-blue-500 text-neutral-700 dark:text-neutral-300"
               >
                 <a.icon size={12} className="text-blue-500" /> {a.label}
               </Button>
@@ -583,7 +583,7 @@ export default function AITutorPage() {
           </div>
         </div>
 
-        {/* ─── Slide-Over Cognitive Graph Drawer (Clean & Non-Intrusive) ────── */}
+        {/* ─── Slide-Over Cognitive Graph Drawer ───────────────────────────── */}
         {showGraphDrawer && (
           <div className="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-xs animate-in fade-in">
             <div className="w-full max-w-md bg-white dark:bg-neutral-900 h-full shadow-2xl border-l border-neutral-200 dark:border-neutral-800 p-6 overflow-y-auto flex flex-col gap-5 animate-in slide-in-from-right">
