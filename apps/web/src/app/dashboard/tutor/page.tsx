@@ -308,75 +308,46 @@ export default function AITutorPage() {
   };
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-neutral-50 dark:bg-neutral-950 font-sans">
-      {/* ─── Left Sidebar ──────────────────────────────────────────────────── */}
-      <aside className="w-60 border-r border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 flex flex-col shrink-0 h-full p-4 overflow-y-auto">
-        <div className="flex items-center gap-2.5 px-2 py-2 mb-6">
-          <div className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shadow-md shadow-blue-600/20">
-            <Brain size={18} />
+    <div className="app-shell h-screen max-h-screen overflow-hidden">
+      {/* ─── Standard Dashboard Sidebar ───────────────────────────────────── */}
+      <aside className="app-sidebar">
+        <div className="flex items-center gap-2.5 px-3 py-2 mb-6">
+          <div className="w-8 h-8 rounded-lg bg-neutral-950 dark:bg-neutral-50 text-neutral-50 dark:text-neutral-950 flex items-center justify-center font-bold">
+            <Brain size={16} />
           </div>
           <span className="font-extrabold text-sm tracking-tight text-neutral-900 dark:text-neutral-50">
             AdaptiveX AI
           </span>
         </div>
 
-        <div className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider px-2 mb-2">
-          Learning
-        </div>
-        <div className="space-y-1">
-          <Link
-            href="/dashboard"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-          >
-            <LayoutDashboard size={15} /> Dashboard
-          </Link>
-          <Link
-            href="/dashboard/path"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-          >
-            <Target size={15} /> Learning Path
-          </Link>
-          <Link
-            href="/dashboard/tutor"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-200/60 dark:border-blue-800/60"
-          >
-            <Brain size={15} /> AI Tutor
-          </Link>
-          <Link
-            href="/dashboard/practice"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-          >
-            <Zap size={15} /> Practice
-          </Link>
-          <Link
-            href="/dashboard/revision"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-          >
-            <RefreshCw size={15} /> Revision
-          </Link>
-        </div>
+        <div className="nav-section-label">Learning</div>
+        <Link href="/dashboard" className="nav-item">
+          <LayoutDashboard size={16} className="nav-icon" /> Dashboard
+        </Link>
+        <Link href="/dashboard/path" className="nav-item">
+          <Target size={16} className="nav-icon" /> Learning Path
+        </Link>
+        <Link href="/dashboard/tutor" className="nav-item active">
+          <Brain size={16} className="nav-icon" /> AI Tutor
+        </Link>
+        <Link href="/dashboard/practice" className="nav-item">
+          <Zap size={16} className="nav-icon" /> Practice
+        </Link>
+        <Link href="/dashboard/revision" className="nav-item">
+          <RefreshCw size={16} className="nav-icon" /> Revision
+        </Link>
 
-        <div className="text-[11px] font-bold text-neutral-400 uppercase tracking-wider px-2 mt-6 mb-2">
-          Account
-        </div>
-        <div className="space-y-1">
-          <Link
-            href="/dashboard"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-          >
-            <BarChart3 size={15} /> Analytics
-          </Link>
-          <Link
-            href="/dashboard"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-          >
-            <Award size={15} /> Achievements
-          </Link>
-        </div>
+        <div className="nav-section-label mt-3">Account</div>
+        <Link href="/dashboard" className="nav-item">
+          <BarChart3 size={16} className="nav-icon" /> Analytics
+        </Link>
+        <Link href="/dashboard" className="nav-item">
+          <Award size={16} className="nav-icon" /> Achievements
+        </Link>
 
         <div className="mt-auto pt-4">
           <Separator className="mb-3" />
-          <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
+          <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
             <Avatar className="h-8 w-8">
               <AvatarFallback className="bg-neutral-900 text-neutral-50 dark:bg-neutral-100 dark:text-neutral-900 text-xs font-bold">
                 AS
@@ -392,25 +363,25 @@ export default function AITutorPage() {
         </div>
       </aside>
 
-      {/* ─── Main Chat Window ──────────────────────────────────────────────── */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden min-w-0">
-        {/* Single Integrated Clean Header (No Sub-strip overlap) */}
-        <header className="h-16 px-6 border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 flex items-center justify-between shrink-0 z-10">
+      {/* ─── Standard Dashboard Main Container ─────────────────────────────── */}
+      <div className="app-main h-screen max-h-screen overflow-hidden flex flex-col min-w-0">
+        {/* Standard App Header */}
+        <header className="app-header justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shadow-sm">
+            <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center">
               <Brain size={18} />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
+                <h1 className="text-sm font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
                   Socratic AI Tutor
-                </span>
+                </h1>
                 <Badge variant="blue" className="text-[10px] py-0 px-2 font-semibold">
                   Binary Trees (43% Mastery)
                 </Badge>
               </div>
               <p className="text-[11px] text-neutral-500">
-                Active model: <code className="font-mono text-[10px]">z-ai/glm-5.3-free</code> · Socratic Active
+                Model: <code className="font-mono text-[10px]">z-ai/glm-5.3-free</code> · Socratic Active
               </p>
             </div>
           </div>
@@ -419,7 +390,7 @@ export default function AITutorPage() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => setShowGraphDrawer(!showGraphDrawer)}
+              onClick={() => setShowGraphDrawer(true)}
               className="hidden sm:flex items-center gap-1.5 h-9 rounded-xl text-xs text-blue-600 dark:text-blue-400 border-blue-200/80 dark:border-blue-800/80 hover:bg-blue-50 dark:hover:bg-blue-950/40"
             >
               <Activity size={14} /> <span>Cognitive Graph</span>
@@ -440,7 +411,7 @@ export default function AITutorPage() {
         </header>
 
         {/* ─── Scrollable Chat Feed ────────────────────────────────────────── */}
-        <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-8 py-6 space-y-6 bg-neutral-50/60 dark:bg-neutral-950/60">
+        <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-8 py-6 space-y-6">
           <div className="max-w-4xl mx-auto space-y-6 pb-6">
             {messages.map(m => {
               const isUser = m.role === "user";
