@@ -16,6 +16,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import Mermaid from "@/components/ui/mermaid";
 
 interface Message {
   id: string;
@@ -189,8 +190,13 @@ function MessageContent({ content }: { content: string }) {
           code: ({ inline, className, children, ...props }: any) => {
             const match = /language-(\w+)/.exec(className || "");
             const codeString = String(children).replace(/\n$/, "");
+            const lang = match ? match[1] : "";
+
+            if (!inline && lang === "mermaid") {
+              return <Mermaid chart={codeString} />;
+            }
+
             if (!inline && (match || codeString.includes("\n"))) {
-              const lang = match ? match[1] : "";
               return (
                 <div className="bg-neutral-950 text-neutral-100 p-3.5 rounded-xl font-mono text-xs leading-relaxed overflow-x-auto border border-neutral-800 my-2">
                   {lang && (
