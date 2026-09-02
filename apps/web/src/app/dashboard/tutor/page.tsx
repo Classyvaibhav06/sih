@@ -3,11 +3,11 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
-  Brain, Send, Sparkles, BookOpen, RefreshCw, Target,
-  Lightbulb, HelpCircle, FileText, Loader2,
+  Brain, Send, BookOpen, RefreshCw, Target,
+  Lightbulb, HelpCircle, Loader2,
   RotateCcw, Copy, Check,
   LayoutDashboard, Zap, BarChart3, Award, Layers,
-  ArrowUpRight, Activity, X, ChevronUp
+  ArrowUpRight, Activity, X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -215,7 +215,6 @@ export default function AITutorPage() {
   const [loading, setLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [showGraphDrawer, setShowGraphDrawer] = useState(false);
-  const [showHud, setShowHud] = useState(true);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -309,9 +308,9 @@ export default function AITutorPage() {
   };
 
   return (
-    <div className="fixed inset-0 flex h-screen w-screen overflow-hidden bg-neutral-50 dark:bg-neutral-950 font-sans">
-      {/* ─── Left Navigation Sidebar ───────────────────────────────────────── */}
-      <aside className="w-60 border-r border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 flex flex-col shrink-0 h-full p-4 overflow-y-auto z-20">
+    <div className="flex h-screen w-full overflow-hidden bg-neutral-50 dark:bg-neutral-950 font-sans">
+      {/* ─── Left Sidebar ──────────────────────────────────────────────────── */}
+      <aside className="w-60 border-r border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 flex flex-col shrink-0 h-full p-4 overflow-y-auto">
         <div className="flex items-center gap-2.5 px-2 py-2 mb-6">
           <div className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shadow-md shadow-blue-600/20">
             <Brain size={18} />
@@ -394,28 +393,24 @@ export default function AITutorPage() {
       </aside>
 
       {/* ─── Main Chat Window ──────────────────────────────────────────────── */}
-      <div className="flex-1 flex flex-col h-full max-h-screen overflow-hidden min-w-0 relative">
-        {/* Top Header */}
-        <header className="h-16 px-6 border-b border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md flex items-center justify-between shrink-0 z-10">
+      <div className="flex-1 flex flex-col h-full overflow-hidden min-w-0">
+        {/* Single Integrated Clean Header (No Sub-strip overlap) */}
+        <header className="h-16 px-6 border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 flex items-center justify-between shrink-0 z-10">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center">
-              <Brain size={19} />
+            <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold shadow-sm">
+              <Brain size={18} />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
                   Socratic AI Tutor
                 </span>
-                <span className="flex h-2 w-2 relative">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
+                <Badge variant="blue" className="text-[10px] py-0 px-2 font-semibold">
+                  Binary Trees (43% Mastery)
+                </Badge>
               </div>
-              <p className="text-[11px] text-neutral-500 flex items-center gap-1.5">
-                <span>Model:</span>
-                <code className="text-[10px] font-mono bg-neutral-100 dark:bg-neutral-800 px-1 py-0.5 rounded text-neutral-700 dark:text-neutral-300">
-                  z-ai/glm-5.3-free
-                </code>
+              <p className="text-[11px] text-neutral-500">
+                Active model: <code className="font-mono text-[10px]">z-ai/glm-5.3-free</code> · Socratic Active
               </p>
             </div>
           </div>
@@ -425,9 +420,9 @@ export default function AITutorPage() {
               variant="outline"
               size="sm"
               onClick={() => setShowGraphDrawer(!showGraphDrawer)}
-              className="hidden sm:flex items-center gap-1.5 h-9 rounded-xl text-xs bg-blue-50/50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 border-blue-200/80 dark:border-blue-800/80 hover:bg-blue-100 dark:hover:bg-blue-950/60"
+              className="hidden sm:flex items-center gap-1.5 h-9 rounded-xl text-xs text-blue-600 dark:text-blue-400 border-blue-200/80 dark:border-blue-800/80 hover:bg-blue-50 dark:hover:bg-blue-950/40"
             >
-              <Activity size={14} /> <span>Cognitive Graph (BKT)</span>
+              <Activity size={14} /> <span>Cognitive Graph</span>
             </Button>
 
             <Button
@@ -443,38 +438,6 @@ export default function AITutorPage() {
             <ThemeToggle />
           </div>
         </header>
-
-        {/* ─── Wide Horizontal Cognitive Mastery HUD Strip ─────────────────── */}
-        {showHud && (
-          <div className="shrink-0 border-b border-neutral-200/80 dark:border-neutral-800 bg-white/70 dark:bg-neutral-900/70 backdrop-blur-sm px-6 py-2.5 flex items-center justify-between flex-wrap gap-3 text-xs z-10">
-            <div className="flex items-center gap-3">
-              <Badge variant="blue" className="text-[10px]">Active Concept</Badge>
-              <span className="font-semibold text-neutral-900 dark:text-neutral-100">
-                {CONTEXT.topic}
-              </span>
-              <span className="text-neutral-400">·</span>
-              <span className="text-neutral-500">{CONTEXT.subtopic}</span>
-            </div>
-
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2.5">
-                <span className="text-neutral-500">Mastery:</span>
-                <div className="w-28">
-                  <Progress value={CONTEXT.mastery} className="h-2" />
-                </div>
-                <span className="font-bold text-blue-600 dark:text-blue-400">{CONTEXT.mastery}%</span>
-              </div>
-
-              <button
-                onClick={() => setShowHud(false)}
-                className="text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
-                title="Collapse banner"
-              >
-                <ChevronUp size={14} />
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* ─── Scrollable Chat Feed ────────────────────────────────────────── */}
         <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-8 py-6 space-y-6 bg-neutral-50/60 dark:bg-neutral-950/60">
