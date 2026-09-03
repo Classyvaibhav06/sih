@@ -17,7 +17,6 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 // ─── Demo Data ─────────────────────────────────────────────────────────────
 const STUDENT = {
@@ -148,7 +147,15 @@ export default function StudentDashboard() {
               <Flame size={14} /> {STUDENT.streak} Day Streak
             </Badge>
 
-            <ThemeToggle />
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8"
+              onClick={() => setTheme(nextTheme)}
+              title="Toggle theme"
+            >
+              {themeIcon}
+            </Button>
           </div>
         </header>
 

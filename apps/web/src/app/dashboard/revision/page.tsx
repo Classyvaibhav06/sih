@@ -14,7 +14,6 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 interface Flashcard {
   id: string;
@@ -180,7 +179,6 @@ export default function RevisionPage() {
             <Badge variant="destructive" className="gap-1.5 py-1 px-3">
               <Clock size={14} /> 4 Cards Due
             </Badge>
-            <ThemeToggle />
           </div>
         </header>
 

@@ -15,7 +15,6 @@ import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 // ─── Curriculum Data ────────────────────────────────────────────────────────
 interface ConceptNode {
@@ -226,7 +225,6 @@ export default function LearningPathPage() {
                 <Sparkles size={14} /> Ask Socratic AI
               </Link>
             </Button>
-            <ThemeToggle />
           </div>
         </header>
 
