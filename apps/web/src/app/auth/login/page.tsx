@@ -7,39 +7,23 @@ import { Brain, Sparkles, TrendingUp, Users, Zap, Shield, ArrowLeft } from "luci
 import { Auth3 } from "@/components/ui/auth-03";
 import ShimmerText from "@/components/ui/shimmer-text";
 import TweetCard from "@/components/ui/tweet-card";
+import { useAuth } from "@/lib/auth-context";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login, quickFill, isLoading } = useAuth();
   const [selectedRole, setSelectedRole] = useState<string>("student");
 
-  const handleSignIn = (email: string, _password: string) => {
-    if (email.includes("teacher")) {
-      router.push("/teacher");
-    } else if (email.includes("parent")) {
-      router.push("/parent");
-    } else {
-      router.push("/dashboard");
-    }
+  const handleSignIn = async (email: string, password?: string) => {
+    await login(email, password || "Demo@1234");
   };
 
-  const handleSignUp = (_name: string, _email: string, _password: string, role?: string) => {
-    if (role === "teacher") {
-      router.push("/teacher");
-    } else if (role === "parent") {
-      router.push("/parent");
-    } else {
-      router.push("/dashboard");
-    }
+  const handleSignUp = async (_name: string, email: string, password?: string, _role?: string) => {
+    await login(email, password || "Demo@1234");
   };
 
-  const quickFillDemo = (role: "student" | "teacher" | "parent") => {
-    if (role === "student") {
-      router.push("/dashboard");
-    } else if (role === "teacher") {
-      router.push("/teacher");
-    } else {
-      router.push("/parent");
-    }
+  const quickFillDemo = async (role: "student" | "teacher" | "parent") => {
+    await quickFill(role);
   };
 
   return (

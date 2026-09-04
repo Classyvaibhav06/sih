@@ -9,7 +9,9 @@
   ],
   "scripts": {
     "dev": "npm run dev --workspace=apps/web",
-    "api": "cd apps/api && .\\.venv\\Scripts\\uvicorn.exe main:app --reload --port 8000",
+    "dev:web": "npm run dev --workspace=apps/web",
+    "dev:api": "cd apps/api && python3 -m uvicorn main:app --reload --port 8000",
+    "seed:api": "cd apps/api && python3 seed_data.py",
     "build": "npm run build --workspace=apps/web",
     "lint": "npm run lint --workspace=apps/web",
     "test": "npm run test --workspace=apps/web"
